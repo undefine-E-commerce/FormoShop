@@ -1,0 +1,5 @@
+aside {
+    flex-direction: row;
+    align-items: start;
+    max-height: 50px;
+}
