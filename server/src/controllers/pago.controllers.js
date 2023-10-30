@@ -1,5 +1,7 @@
 import "dotenv/config";
 import mercadopago from "mercadopago";
+import { Logger } from "../../loaders/logger.js";
+
 
 export const createOrder = async (req, res) => {
   mercadopago.configure({

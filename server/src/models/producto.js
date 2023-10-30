@@ -1,27 +1,36 @@
 import { sequelize, DataTypes } from "../config/db.js";
 
-const ProductoModel = sequelize.define("Producto", {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
+const ProductoModel = sequelize.define(
+  "Productos",
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
+    },
+    titulo: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    descripcion: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    producto_categorias: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    imagen_url: {
+      type: DataTypes.STRING,
+    },
+    precio: {
+      type: DataTypes.DECIMAL(10, 2),
+    },
   },
-  titulo: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  descripcion: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  image: {
-    type: DataTypes.STRING,
-  },
-  precio: {
-    type: DataTypes.DECIMAL(10, 2),
+  {
+    timestamps: true,
   }
-}, {
-  timestamps: true, // Agrega createdAt y updatedAt
-});
+);
 
 export default ProductoModel;

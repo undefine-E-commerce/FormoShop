@@ -1,7 +1,6 @@
 import { Router } from "express";
-import { createOrder } from "../../src/controllers/payment.js";
+import { createOrder } from "../controllers/pago.controllers.js";
 const router = Router();
-
 
 //creacion de preferencia
 router.post("/create-order", createOrder);

@@ -13,6 +13,7 @@ const ImageCloud = sequelize.define(
     public_id: DataTypes.STRING,
     version_id: DataTypes.STRING,
     creation: DataTypes.DATE,
+    
   },
   {
     sequelize,

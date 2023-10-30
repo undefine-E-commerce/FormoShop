@@ -2,12 +2,14 @@ import { sequelize, DataTypes } from "../config/db.js";
 import ProductoModel from "./producto.js";
 
 const TiendaModel = sequelize.define(
-  "Tienda",
+  "Tiendas",
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
+
+      allowNull: false,
     },
     nombre: {
       type: DataTypes.STRING,
@@ -17,8 +19,16 @@ const TiendaModel = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    image: {
+    tienda_categorias: {
       type: DataTypes.STRING,
+      allowNull: false,
+    },
+    imagen_url: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    dueño: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
 
@@ -28,13 +38,8 @@ const TiendaModel = sequelize.define(
     // },
   },
   {
-    timestamps: true, // Agrega createdAt y updatedAt
+    timestamps: true,
   }
 );
-
-// Define la relación entre Tienda y Producto (una tienda tiene varios productos)
-// TiendaModel.hasMany(ProductoModel, { foreignKey: "tienda_id" }); // Asegúrate de que "tienda_id" coincida con la clave foránea en el modelo Producto
-
-// TiendaModel.sync({ force: true }); // Opcional: Esto recreará la tabla en cada inicio
 
 export default TiendaModel;

@@ -4,49 +4,46 @@ import { join } from "path";
 import { unlink } from "fs";
 import { v4 as uuidv4 } from "uuid";
 
-// Muestra todos los productos
-export const showAllProducts = async (req, res) => {
+
+export const obtenerProductos = async (req, res) => {
   try {
-    const products = await ProductoModel.findAll();
-    res.status(200).json(products);
+    const productos = await ProductoModel.findAll();
+    res.status(200).json(productos);
   } catch (error) {
     Logger.error("Error al buscar todos los productos", error);
     res.status(500).json({ error: "No se pudieron recuperar los productos" });
   }
 };
 
-// Muestra un producto específico por su ID
-export const showProduct = async (req, res) => {
-  const { id } = req.params;
+
+export const obtenerProducto = async (req, res) => {
+  const { productId } = req.params.id;
 
   try {
-    const product = await ProductoModel.findByPk(id);
+    const producto = await UsuarioModel.findByPk(productId);
 
-    if (!product) {
-      res.status(404).json({ error: "Producto no encontrado" });
-      return;
+    if (!producto) {
+      return res.status(404).json({ error: "Producto no encontrado" });
     }
 
-    res.status(200).json(product);
+    res.status(200).json(producto);
   } catch (error) {
     Logger.error("Error al buscar el producto", error);
     res.status(500).json({ error: "No se pudo recuperar el producto" });
   }
 };
 
-// Crea un nuevo producto
 
-export const createProduct = async (req, res) => {
-  const { titulo, descripcion, precio, image } = req.body;
+export const crearProducto = async (req, res) => {
+  const { titulo, descripcion, precio, imagen_url } = req.body;
   // const image = req.files;
   // //subida de archivos
   // const original_filename = image.name.split(".")[0];
   // const format = image.name.split(".")[1];
   // return res.json({ image: { original_filename, format } });
 
-  if (!titulo || !descripcion || !precio || !image) {
-    res.status(400).json({ error: "Faltan datos obligatorios" });
-    return;
+  if (!titulo || !descripcion || !precio || !imagen_url) {
+    return res.status(400).json({ error: "Faltan datos obligatorios" });
   }
 
   try {
@@ -62,7 +59,7 @@ export const createProduct = async (req, res) => {
       descripcion: descripcion,
       precio: precio,
       // image: uploadPath,
-      image: image,
+      image: imagen_url,
       // image: { original_filename, format, file_name },
     });
 
@@ -73,39 +70,37 @@ export const createProduct = async (req, res) => {
   }
 };
 
-// Actualiza un producto existente
-export const updateProduct = async (req, res) => {
+
+export const actualizarProducto = async (req, res) => {
   const { productId } = req.params.id;
   const { titulo, descripcion, precio } = req.params;
   const { image } = req.files;
 
   // return res.json({image: { original_filename, format,  }});
 
-  if (!id || (!titulo && !descripcion && !precio && !image)) {
-    res.status(400).json({ error: "Faltan datos obligatorios" });
-    return;
+  if (!productId || (!titulo && !descripcion && !precio && !image)) {
+    return res.status(400).json({ error: "Faltan datos obligatorios" });
   }
 
   try {
-    const product = await ProductoModel.findByPk(productId);
+    const producto = await ProductoModel.findByPk(productId);
 
-    if (!product) {
-      res.status(404).json({ error: "Producto no encontrado" });
-      return;
+    if (!producto) {
+      return res.status(404).json({ error: "Producto no encontrado" });
     }
 
     // Actualiza los campos necesarios
-    if (titulo) product.titulo = titulo;
-    if (descripcion) product.descripcion = descripcion;
-    if (precio) product.precio = precio;
+    if (titulo) producto.titulo = titulo;
+    if (descripcion) producto.descripcion = descripcion;
+    if (precio) producto.precio = precio;
     if (image) {
       const original_filename = image.name.split(".")[0];
       const format = image.name.split(".")[1];
       const new_file_name = uuidv4() + "." + format;
       const unlinkPath = join(
         import.meta.url,
-        "../temp",
-        product.image.file_name
+        "../images",
+        producto.image.file_name
       );
       unlink(unlinkPath, function (err) {
         if (!err) {
@@ -117,18 +112,18 @@ export const updateProduct = async (req, res) => {
 
       const uploadPath = join(import.meta.url, "../temp", new_file_name);
 
-      product.image.original_filename = original_filename;
-      product.image.format = format;
-      product.image.file_name = new_file_name;
+      producto.image.original_filename = original_filename;
+      producto.image.format = format;
+      producto.image.file_name = new_file_name;
 
       image.mv(uploadPath, function (err) {
         if (err) throw new Error(err);
       });
     }
 
-    await product.save();
+    await producto.update();
 
-    res.status(200).json(product);
+    res.status(200).json(producto);
   } catch (error) {
     Logger.error("Error al actualizar el producto", error);
     res.status(500).json({ error: "No se pudo actualizar el producto" });
@@ -136,20 +131,20 @@ export const updateProduct = async (req, res) => {
 };
 
 // Elimina un producto por su ID
-export const deleteProduct = async (req, res) => {
+export const eliminarProducto = async (req, res) => {
   const { productId } = req.params.id;
 
   try {
-    const product = await ProductoModel.findByPk(productId);
+    const producto = await UsuarioModel.findByPk(productId);
 
-    if (!product) {
-      res.status(404).json({ error: "Producto no encontrado" });
-      return;
+    if (!producto) {
+      return res.status(404).json({ error: "Usuario no encontrado" });
     }
+
     const uploadPath = join(
       import.meta.url,
       "../temp",
-      `${book.image.file_name}`
+      `${producto.image.file_name}`
     );
 
     unlink(uploadPath, function (err) {
@@ -158,7 +153,7 @@ export const deleteProduct = async (req, res) => {
       }
     });
 
-    await product.destroy({ id: productId });
+    await producto.destroy();
 
     res.status(204).json();
   } catch (error) {
