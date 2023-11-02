@@ -1,52 +1,25 @@
-import { Logger } from "../../loaders/logger.js";
+import { Logger } from "../loaders/logger.js";
 import TiendaModel from "../models/tienda.js";
 import { join } from "path";
 import { unlink } from "fs";
 import { v4 as uuidv4 } from "uuid";
 
-// Muestra todos los tiendas
-export const obtenerTiendas = async (req, res) => {
-  try {
-    const tiendas = await TiendaModel.findAll();
-    res.status(200).json(tiendas);
-  } catch (error) {
-    Logger.error("Error al buscar todos los tiendas", error);
-    res.status(500).json({ error: "No se pudieron recuperar los tiendas" });
-  }
-};
+const crearTienda = async (req, res) => {
 
-// Muestra un tienda específico por su ID
-export const obtenerTienda = async (req, res) => {
-  const { storeId } = req.params.id;
+  //TODO: falta agregar categoria-tienda
+  //TODO: subida de archivos
 
-  try {
-    const tienda = await UsuarioModel.findByPk(storeId);
-
-    if (!tienda) {
-      return res.status(404).json({ error: "Tienda no encontrado" });
-    }
-
-    res.status(200).json(tienda);
-  } catch (error) {
-    Logger.error("Error al buscar el tienda", error);
-    res.status(500).json({ error: "No se pudo recuperar el tienda" });
-  }
-};
-
-// Crea un nuevo tienda
-export const crearTienda = async (req, res) => {
-  const { titulo, descripcion, imagen_url } = req.body;
   // const image = req.files;
   // //subida de archivos
   // const original_filename = image.name.split(".")[0];
   // const format = image.name.split(".")[1];
   // return res.json({ image: { original_filename, format } });
-
-  if (!titulo || !descripcion || !imagen_url) {
-    return res.status(400).json({ error: "Faltan datos obligatorios" });
-  }
-
+  
   try {
+    const { nombre, descripcion, imagen_url,  } = req.body;  
+    if (!nombre || !descripcion || !imagen_url) {
+      return res.status(400).json({ error: "Faltan datos obligatorios" });
+    }
     // const file_name = uuidv4() + "." + format;
     // const uploadPath = join(import.meta.url, "../temp", file_name);
 
@@ -54,111 +27,98 @@ export const crearTienda = async (req, res) => {
     //   if (err) throw new Error(err);
     // });
 
-    const tienda = await TiendaModel.create({
-      titulo: titulo,
+    const tiendaExistente = await TiendaModel.findOne({ where: { nombre } });
+    if (tiendaExistente) {
+      return res.status(400).json({ error: "Ese nombre de tienda ya está registrado" });
+    }
+
+    const nuevaTienda = await TiendaModel.create({
+      nombre: nombre,
       descripcion: descripcion,
-
-      // image: uploadPath,
-      // image: image,
-      // image: { original_filename, format, file_name },
+      imagen_url: imagen_url
     });
 
-    res.status(201).json(tienda);
+    Logger.info("Tienda creada exitosamente: ", { nuevaTienda });
+    return res.status(201).json({ mensaje: "Tienda creada exitosamente", tienda: nuevaTienda });
+   
   } catch (error) {
-    Logger.error("Error al crear un tienda", error);
-    res.status(500).json({ error: "No se pudo crear el tienda" });
+    Logger.error("Error al crear una tienda", error);
+    return res.status(500).json({ error: "No se pudo crear la tienda" });
   }
 };
 
-// Actualiza un tienda existente
-export const actualizarTienda = async (req, res) => {
-  const { storeId } = req.params.id;
-  const { titulo, descripcion } = req.params;
-  const { image } = req.files;
-
-  // return res.json({image: { original_filename, format,  }});
-
-  if (!storeId || (!titulo && !descripcion && !image)) {
-    return res.status(400).json({ error: "Faltan datos obligatorios" });
-  }
-
+const obtenerTiendas = async (req, res) => {
   try {
-    const tienda = await TiendaModel.findByPk(storeId);
-
-    if (!tienda) {
-      return res.status(404).json({ error: "Tienda no encontrado" });
+    const tiendas = await TiendaModel.findAll();
+    if (!tiendas) {
+      return res.status(404).json({ error: "Tiendas no encontradas" });
     }
-
-    // Actualiza los campos necesarios
-    if (titulo) tienda.titulo = titulo;
-    if (descripcion) tienda.descripcion = descripcion;
-
-    if (image) {
-      const original_filename = image.name.split(".")[0];
-      const format = image.name.split(".")[1];
-      const new_file_name = uuidv4() + "." + format;
-      const unlinkPath = join(
-        import.meta.url,
-        "../images",
-        tienda.image.file_name
-      );
-      unlink(unlinkPath, function (err) {
-        if (!err) {
-          Logger.info("Store image eliminada");
-        } else {
-          Logger.error(err);
-          console.log(err);
-        }
-      });
-
-      const uploadPath = join(import.meta.url, "../temp", new_file_name);
-
-      tienda.image.original_filename = original_filename;
-      tienda.image.format = format;
-      tienda.image.file_name = new_file_name;
-
-      image.mv(uploadPath, function (err) {
-        if (err) throw new Error(err);
-      });
-    }
-
-    await tienda.update();
-
-    res.status(200).json(tienda);
+    return res.status(200).json({ mensaje: "Tiendas obtenidas exitosamente", tiendas: tiendas });
   } catch (error) {
-    Logger.error("Error al actualizar el tienda", error);
-    res.status(500).json({ error: "No se pudo actualizar el tienda" });
+    Logger.error("Error al obtener las tiendas", error);
+    return res.status(500).json({ error: "Error al obtener las tiendas" });
   }
 };
 
-// Elimina un tienda por su ID
-export const eliminarTienda = async (req, res) => {
-  const { storeId } = req.params.id;
-
+const obtenerTienda = async (req, res) => {
+  const { tiendaId } = req.params.id;
   try {
-    const tienda = await UsuarioModel.findByPk(storeId);
-
+    const tienda = await TiendaModel.findByPk(tiendaId);
     if (!tienda) {
-      return res.status(404).json({ error: "Usuario no encontrado" });
+      return res.status(404).json({ error: "Tienda no existe" });
     }
 
-    const uploadPath = join(
-      import.meta.url,
-      "../temp",
-      `${tienda.image.file_name}`
-    );
+    return res.status(200).json({ mensaje: "Tienda obtenida exitosamente", tienda: tienda });
+  } catch (error) {
+    Logger.error("Error al obtener la tienda", error);
+    return res.status(500).json({ error: "Error al obtener la tienda" });
+  }
+};
 
-    unlink(uploadPath, function (err) {
-      if (!err) {
-        Logger.info("Store image eliminada");
-      }
+//TODO: repito, fix subida de imagenes y adaptar esto
+
+const actualizarTienda = async (req, res) => {
+  const { tiendaId } = req.params.id;
+  const { nombre, descripcion, imagen_url} = req.body;
+  // const { image } = req.files;
+  try {
+    const tienda = await TiendaModel.findByPk(tiendaId);
+    if (!tienda) {
+      return res.status(404).json({ error: "Tienda no existe" });
+    }
+    await tienda.update({
+      nombre,
+      descripcion,
+      imagen_url
     });
+    Logger.info("Tienda actualizada exitosamente",  { tienda });
+    return res.status(200).json({ mensaje: "Tienda actualizada exitosamente", tienda: tienda });
+  } catch (error) {
+    Logger.error("Error al actualizar la tienda", error);
+    return res.status(500).json({ error: "Error al actualizar la tienda" });
+  }
+};
 
+const eliminarTienda = async (req, res) => {
+  const { tiendaId } = req.params.id;
+  try {
+    const tienda = await TiendaModel.findByPk(tiendaId);
+    if (!tienda) {
+      return res.status(404).json({ error: "Tienda no existe" });
+    }
     await tienda.destroy();
-
-    res.status(204).json();
+    Logger.info("Tienda eliminado exitosamente", { tienda });
+    return res.status(200).json({ mensaje: "Tienda eliminado exitosamente", tienda: tienda });
   } catch (error) {
-    Logger.error("Error al eliminar el tienda", error);
-    res.status(500).json({ error: "No se pudo eliminar el tienda" });
+    Logger.error("Error al eliminar la tienda", error);
+    return res.status(500).json({ error: "Error al eliminar la tienda" });
   }
+};
+
+export {
+  crearTienda,
+  obtenerTiendas,
+  obtenerTienda,
+  actualizarTienda,
+  eliminarTienda,
 };

@@ -1,5 +1,4 @@
 import { sequelize, DataTypes } from "../config/db.js";
-import ProductoModel from "./producto.js";
 
 const TiendaModel = sequelize.define(
   "Tiendas",
@@ -8,7 +7,6 @@ const TiendaModel = sequelize.define(
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
-
       allowNull: false,
     },
     nombre: {
@@ -19,6 +17,7 @@ const TiendaModel = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    //TODO: categoria de tiendas
     tienda_categorias: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -27,6 +26,7 @@ const TiendaModel = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+     //TODO: referenciar dueño - usuario vendedor
     dueño: {
       type: DataTypes.INTEGER,
       allowNull: false,

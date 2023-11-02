@@ -5,8 +5,7 @@ import {
   obtenerUsuario,
   actualizarUsuario,
   eliminarUsuario,
-} from "../controllers/usuario.controllers.js";
-// import { createUserSchema, updateUserSchema } from "./userValidation";
+} from "../controllers/usuarios/usuario.controllers.js";
 
 const router = Router();
 

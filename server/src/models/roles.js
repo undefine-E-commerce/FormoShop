@@ -12,6 +12,9 @@ const RolModel = sequelize.define("Rols", {
   descripcion: { type: DataTypes.STRING, allowNull: false },
 });
 
+RolModel.bulkBuild('Admin')
+RolModel.bulkBuild('Vendedor')
+RolModel.bulkBuild('Comprador')
 
 
 

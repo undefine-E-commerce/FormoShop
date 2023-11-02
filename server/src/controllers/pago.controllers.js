@@ -1,7 +1,15 @@
 import "dotenv/config";
 import mercadopago from "mercadopago";
-import { Logger } from "../../loaders/logger.js";
+import { Logger } from "../loaders/logger.js";
 
+//funcion hijueputa, creacion de preferencia para SDK mercado pago
+//TODO: adaptar esto para su re-uso 
+//toma un objeto con los siguientes atributos para crear una 'preference_id':
+//product = {title, price,currency, quantity}.req.params
+//DEVUELVE INITPOINT URL
+//currency queda fijo en 'ARS' = peso argentino
+//quantity deberia pasarse por el #carritoglobal. programar eso
+//ojala lleguemos
 
 export const createOrder = async (req, res) => {
   mercadopago.configure({

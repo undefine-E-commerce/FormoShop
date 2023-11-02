@@ -1,14 +1,9 @@
 import { Router } from "express";
+import { register, login } from "../controllers/usuarios/auth.controllers.js"; 
 
 const router = Router();
 
-// Ruta para autenticar al usuario
-router.post("/autenticar");
-
-// Ruta protegida que requiere autenticación
-router.get("/recurso-protegido", validarAutenticacion, (req, res) => {
-  // Lógica para acceder al recurso protegido
-  res.status(200).json({ mensaje: "¡Acceso permitido al recurso protegido!" });
-});
+router.post("/register", register);
+router.post("/login", login);
 
 export default router;

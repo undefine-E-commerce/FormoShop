@@ -27,6 +27,11 @@ const ProductoModel = sequelize.define(
     precio: {
       type: DataTypes.DECIMAL(10, 2),
     },
+    //TODO: referenciar a que tienda pertecene cada producto
+    //tienda:{
+       //   type: DataTypes.INTEGER,
+    //   allowNull: false,
+    // },
   },
   {
     timestamps: true,

@@ -17,7 +17,6 @@ const UsuarioModel = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-
     dni: { type: DataTypes.STRING, allowNull: false, unique: true },
     email: {
       type: DataTypes.STRING,

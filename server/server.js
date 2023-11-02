@@ -1,85 +1,65 @@
-// Importa las dependencias y módulos necesarios
+//@ts-check
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import morgan from "morgan";
-import paymentRoutes from "./src/routes/pago.routes.js";
+import authRoutes from './src/routes/auth.routes.js'
+import userRoutes from "./src/routes/usuario.routes.js";
 import storeRoutes from "./src/routes/tienda.routes.js";
 import productRoutes from "./src/routes/producto.routes.js";
-import userRoutes from "./src/routes/usuario.routes.js";
+import paymentRoutes from "./src/routes/pago.routes.js";
 import helmet from "helmet";
 import fileUpload from "express-fileupload";
-
-import { Logger } from "./loaders/logger.js";
-
-//error handler personalizado
-import { handleError } from "./src/middlewares/handleError.js";
+import { Logger } from "./src/loaders/logger.js";
 
 import { connectToDatabase } from "./src/config/db.js";
 import { syncModels } from "./src/config/sync.js";
 
-// Crea una instancia de la aplicación Express
-const app = express();
+const app = express()
 
-// Define el puerto predeterminado y la URL
 const PORT = process.env.PORT || 666;
 const URL = process.env.URL || "http://localhost:";
 
-// Habilita algunas configuraciones de seguridad y middleware
 app.enable("trust proxy");
-app.use(helmet());
+app.use(helmet())
 app.use(cors());
-app.use(helmet());
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload());
 
-// Agrega las rutas para pagos, tiendas y productos
-app.use(paymentRoutes);
-app.use(userRoutes);
-app.use(storeRoutes);
-app.use(productRoutes);
+app.use('/api/auth',authRoutes);
+app.use('/api/pagos',paymentRoutes);
+app.use('/api/usuarios',userRoutes);
+app.use('/api/tiendas',storeRoutes);
+app.use('/api/productos', productRoutes);
 
 // Define una ruta de inicio
 app.get("/", (req, res) => {
   res.send("¡Hola, mundo!");
 });
 
+
+app.use((req, res, next) => { 
+  const err = new Error('Ruta no encontrada');
+  err.status = 404;
+  next(err);
+});
+
+
 app.use((err, req, res, next) => {
-  // Registrar el error en la consola
-  console.error(err.stack);
-
-  if (err.statusCode) {
-    // Si el error ya tiene un statusCode, usarlo
-    return handleError(err, req, res, next);
-  } else {
-    // Si no tiene statusCode, asumir que es un error de servidor (código 500)
-    const error = {
-      statusCode: 500,
-      message: err.message || "Error interno del servidor",
-      details: err.details,
-      stack: err.stack,
-    };
-    return handleError(error, req, res, next);
-  }
+  res.status(err.status || 500);  res.json({
+    error: {
+      message: err.message
+    }
+  });
 });
 
-// Middleware para manejar rutas no encontradas
-app.use((req, res, next) => {
-  const err = {
-    statusCode: 404,
-    message: "Ruta no encontrada",
-  };
-
-  handleError(err, req, res, next);
-});
 // Inicia el servidor y muestra información de inicio
 app.listen(PORT, async () => {
   try {
-    await connectToDatabase(Logger.info("Conectado a la base de datos"));
-    await syncModels(Logger.info("Sync models"));
-
+    await connectToDatabase();
+    await syncModels();
     Logger.info("Servidor escuchando en:");
     Logger.http(`${URL}${PORT}`);
   } catch (error) {

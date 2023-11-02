@@ -1,5 +1,5 @@
 import { sequelize } from "./db.js";
-import { Logger } from "../../loaders/logger.js";
+import { Logger } from "../loaders/logger.js";
 import ProductoModel from "../models/producto.js";
 import TiendaModel from "../models/tienda.js";
 import CategoriaTienda from "../models/categoria_tiendas.js";

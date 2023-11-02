@@ -8,12 +8,12 @@ pnpm-debug.log*
 lerna-debug.log*
 .env
 node_modules
-dist
+dist 
 dist-ssr
 *.local
 temp
 uploads
-
+data_sheet_test_mercadopago.xlsx
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

@@ -1,19 +1,11 @@
 import { validationResult } from "express-validator";
-import UsuarioModel from "../models/usuario.js";
+import UsuarioModel from "../../models/usuario.js";
 import { Logger } from "../../loaders/logger.js";
 
 
 const crearUsuario = async (req, res) => {
   try {
-    const errores = validationResult(req);
-    if (!errores.isEmpty()) {
-      const erroresArray = errores.array();
-      return res
-        .status(400)
-        .json({ error: "Datos de usuario inválidos", detalles: erroresArray });
-    }
-
-    const {
+      const {
       nombre,
       apellido,
       contrasenia,
@@ -24,14 +16,12 @@ const crearUsuario = async (req, res) => {
       rol,
     } = req.body;
 
-    // Buscar si ya existe un usuario con el mismo email
     const usuarioExistente = await UsuarioModel.findOne({ where: { email } });
 
     if (usuarioExistente) {
       return res.status(400).json({ error: "El email ya está registrado" });
     }
 
-    // Crear un nuevo usuario
     const nuevoUsuario = await UsuarioModel.create({
       nombre,
       apellido,
@@ -44,28 +34,25 @@ const crearUsuario = async (req, res) => {
     });
 
     Logger.info("Usuario creado exitosamente", { nuevoUsuario });
-    return res
-      .status(201)
-      .json({ mensaje: "Usuario creado exitosamente", usuario: nuevoUsuario });
+    return res.status(201).json({ mensaje: "Usuario creado exitosamente", usuario: nuevoUsuario });
   } catch (error) {
     Logger.error("Error al crear el usuario", error);
     return res.status(500).json({ error: "Error al crear el usuario" });
   }
 };
 
-
 const obtenerUsuarios = async (req, res) => {
   try {
     const usuarios = await UsuarioModel.findAll();
-    return res
-      .status(200)
-      .json({ mensaje: "Usuarios obtenidos exitosamente", usuarios });
+    if (!usuarios) {
+      return res.status(404).json({ error: "Usuarios no encontradas" });
+    }
+    return res.status(200).json({ mensaje: "Usuarios obtenidos exitosamente", usuarios: usuarios });
   } catch (error) {
     Logger.error("Error al obtener los usuarios", error);
     return res.status(500).json({ error: "Error al obtener los usuarios" });
   }
 };
-
 
 const obtenerUsuario = async (req, res) => {
   const { usuarioId } = req.params.id;
@@ -74,12 +61,10 @@ const obtenerUsuario = async (req, res) => {
     const usuario = await UsuarioModel.findByPk(usuarioId);
 
     if (!usuario) {
-      return res.status(404).json({ error: "Usuario no encontrado" });
+      return res.status(404).json({ error: "Usuario no existe" });
     }
 
-    return res
-      .status(200)
-      .json({ mensaje: "Usuario obtenido exitosamente", usuario });
+    return res.status(200).json({ mensaje: "Usuario obtenido exitosamente", usuario: usuario });
   } catch (error) {
     Logger.error("Error al obtener el usuario", error);
     return res.status(500).json({ error: "Error al obtener el usuario" });
@@ -96,10 +81,8 @@ const actualizarUsuario = async (req, res) => {
     const usuario = await UsuarioModel.findByPk(usuarioId);
 
     if (!usuario) {
-      return res.status(404).json({ error: "Usuario no encontrado" });
+      return res.status(404).json({ error: "Usuario no existe" });
     }
-
-
     await usuario.update({
       nombre,
       apellido,
@@ -109,18 +92,15 @@ const actualizarUsuario = async (req, res) => {
       imagen_perfil,
       rol,
     });
-
-    Logger.info("Usuario actualizado exitosamente", { usuario });
-    return res
-      .status(200)
-      .json({ mensaje: "Usuario actualizado exitosamente", usuario });
+    Logger.info("Usuario actualizado exitosamente",  { usuario });
+    return res.status(200).json({ mensaje: "Usuario actualizado exitosamente", usuario: usuario });
   } catch (error) {
     Logger.error("Error al actualizar el usuario", error);
     return res.status(500).json({ error: "Error al actualizar el usuario" });
   }
 };
 
-// Eliminar un usuario
+
 const eliminarUsuario = async (req, res) => {
   const { usuarioId } = req.params.id;
 
@@ -128,13 +108,13 @@ const eliminarUsuario = async (req, res) => {
     const usuario = await UsuarioModel.findByPk(usuarioId);
 
     if (!usuario) {
-      return res.status(404).json({ error: "Usuario no encontrado" });
+      return res.status(404).json({ error: "Usuario no existe" });
     }
 
     await usuario.destroy();
 
     Logger.info("Usuario eliminado exitosamente", { usuario });
-    return res.status(200).json({ mensaje: "Usuario eliminado exitosamente" });
+    return res.status(200).json({ mensaje: "Usuario eliminado exitosamente", usuario: usuario });
   } catch (error) {
     Logger.error("Error al eliminar el usuario", error);
     return res.status(500).json({ error: "Error al eliminar el usuario" });
