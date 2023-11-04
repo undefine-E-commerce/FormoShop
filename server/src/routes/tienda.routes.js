@@ -9,10 +9,10 @@ import {
 
 const router = Router();
 
-router.post("/create-store", crearTienda);
+router.post("/stores/create-store", crearTienda);
 router.get("/stores", obtenerTiendas);
 router.get("/stores/:id", obtenerTienda);
-router.put("/update-store/:id", actualizarTienda);
-router.delete("/delete-store/:id", eliminarTienda);
+router.put("/stores/update-store/:id", actualizarTienda);
+router.delete("/stores/delete-store/:id", eliminarTienda);
 
 export default router;

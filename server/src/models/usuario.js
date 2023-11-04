@@ -32,14 +32,14 @@ const UsuarioModel = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    imagen_perfil: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    rol: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
+    // imagen_perfil: {
+    //   type: DataTypes.STRING,
+    //   allowNull: true,
+    // },
+    // rol: {
+    //   type: DataTypes.INTEGER,
+    //   allowNull: true,
+    // },
   },
   {
     timestamps: true,

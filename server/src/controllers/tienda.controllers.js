@@ -61,9 +61,9 @@ const obtenerTiendas = async (req, res) => {
 };
 
 const obtenerTienda = async (req, res) => {
-  const { tiendaId } = req.params.id;
+  const { Id } = req.params.id;
   try {
-    const tienda = await TiendaModel.findByPk(tiendaId);
+    const tienda = await TiendaModel.findByPk(Id);
     if (!tienda) {
       return res.status(404).json({ error: "Tienda no existe" });
     }
@@ -78,11 +78,11 @@ const obtenerTienda = async (req, res) => {
 //TODO: repito, fix subida de imagenes y adaptar esto
 
 const actualizarTienda = async (req, res) => {
-  const { tiendaId } = req.params.id;
+  const { Id } = req.params.id;
   const { nombre, descripcion, imagen_url} = req.body;
   // const { image } = req.files;
   try {
-    const tienda = await TiendaModel.findByPk(tiendaId);
+    const tienda = await TiendaModel.findByPk(Id);
     if (!tienda) {
       return res.status(404).json({ error: "Tienda no existe" });
     }
@@ -100,9 +100,9 @@ const actualizarTienda = async (req, res) => {
 };
 
 const eliminarTienda = async (req, res) => {
-  const { tiendaId } = req.params.id;
+  const { Id } = req.params.id;
   try {
-    const tienda = await TiendaModel.findByPk(tiendaId);
+    const tienda = await TiendaModel.findByPk(Id);
     if (!tienda) {
       return res.status(404).json({ error: "Tienda no existe" });
     }

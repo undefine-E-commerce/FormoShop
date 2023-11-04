@@ -21,9 +21,9 @@ const ProductoModel = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    imagen_url: {
-      type: DataTypes.STRING,
-    },
+    // imagen_url: {
+    //   type: DataTypes.STRING,
+    // },
     precio: {
       type: DataTypes.DECIMAL(10, 2),
     },

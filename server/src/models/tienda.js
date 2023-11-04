@@ -22,15 +22,15 @@ const TiendaModel = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    imagen_url: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
+    // imagen_url: {
+    //   type: DataTypes.STRING,
+    //   allowNull: false,
+    // },
      //TODO: referenciar dueño - usuario vendedor
-    dueño: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
+    // dueño: {
+    //   type: DataTypes.INTEGER,
+    //   allowNull: false,
+    // },
 
     // productos: {
     //   type: DataTypes.INTEGER,

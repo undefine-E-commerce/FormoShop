@@ -8,10 +8,10 @@ import {
 } from "../controllers/producto.controllers.js";
 
 const router = Router();
-router.post("/create-product", crearProducto);
+router.post("/products/create-product", crearProducto);
 router.get("/products", obtenerProductos);
 router.get("/products/:id", obtenerProducto);
-router.put("/update-product/:id", actualizarProducto);
-router.delete("/delete-product/:id", eliminarProducto);
+router.put("/products/update-product/:id", actualizarProducto);
+router.delete("/products/delete-product/:id", eliminarProducto);
 
 export default router;

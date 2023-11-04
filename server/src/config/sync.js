@@ -30,11 +30,11 @@ export const syncModels = async () => {
     // Relación de Usuario con Rol (Uno a Uno)
     UsuarioModel.belongsTo(RolModel, { foreignKey: "rol" });
     RolModel.hasOne(UsuarioModel, { foreignKey: "rol" });
-    Logger.info("Todas las asociaciones entre modelos han sido definidas");
+    Logger.info("✅ Todas las asociaciones entre modelos han sido definidas");
 
-    await sequelize.sync({ alter: true }); // Set force: true to drop existing tables
-    Logger.info("Todos los modelos han sido sincronizados");
+    await sequelize.sync({ force: true }); // Set force: true to drop existing tables
+    Logger.info("✅ Todos los modelos han sido sincronizados");
   } catch (error) {
-    Logger.error("Ha ocurrido un error durante la sincronización:", error);
+    Logger.error("❌ Ha ocurrido un error durante la sincronización:", error);
   }
 };
