@@ -39,7 +39,7 @@ const crearTienda = async (req, res) => {
       imagen_url: imagen_url,
     });
 
-    Logger.info("Tienda creada exitosamente: ", { nuevaTienda });
+    Logger.info("Tienda creada exitosamente: ", nuevaTienda);
     return res
       .status(201)
       .json({ mensaje: "Tienda creada exitosamente", tienda: nuevaTienda });

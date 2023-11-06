@@ -1,4 +1,5 @@
 import { sequelize, DataTypes } from "../config/db.js";
+import UsuarioModel from "./usuario.js";
 
 const TiendaModel = sequelize.define(
   "Tiendas",
@@ -17,25 +18,18 @@ const TiendaModel = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    //TODO: categoria de tiendas
     tienda_categorias: {
       type: DataTypes.STRING,
-      // allowNull: false,
+      allowNull: true,
     },
-    // imagen_url: {
-    //   type: DataTypes.STRING,
-    //   allowNull: false,
-    // },
-    //TODO: referenciar dueño - usuario vendedor
-    // dueño: {
-    //   type: DataTypes.INTEGER,
-    //   allowNull: false,
-    // },
-
-    // productos: {
-    //   type: DataTypes.INTEGER,
-    //   allowNull: false,
-    // },
+    vendedor: {
+      type: DataTypes.STRING,
+      // allowNull: true,
+      // references: {
+      //   model: UsuarioModel,
+      //   key: "id",
+      // },
+    },
   },
   {
     timestamps: true,

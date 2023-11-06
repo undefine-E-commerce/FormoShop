@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "../admin.css";
+// import "../admin.css";
 
 const Productos = () => {
   const [productos, setProductos] = useState([]);
@@ -147,7 +147,7 @@ const Productos = () => {
           ))}
         </tbody>
       </table>
-      <div className="create-product">
+      <div className="create">
         <h2>Crear Producto</h2>
         <div className="input-fields">
           <input

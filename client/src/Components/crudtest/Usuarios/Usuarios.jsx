@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "../admin.css";
+// import "../admin.css";
 
 const Usuarios = () => {
   const [usuariosData, setUsuariosData] = useState([]);
   const [nuevoUsuario, setNuevoUsuario] = useState({
+    id: "",
     nombre: "",
     apellido: "",
     contrasenia: "",
@@ -93,6 +94,7 @@ const Usuarios = () => {
       <table className="table table-bordered">
         <thead>
           <tr>
+            <th>ID</th>
             <th>Nombre</th>
             <th>Apellido</th>
             <th>DNI</th>
@@ -105,6 +107,7 @@ const Usuarios = () => {
         <tbody>
           {usuariosData.map((usuario) => (
             <tr key={usuario.id}>
+              <td>{usuario.id}</td>
               <td>{usuario.nombre}</td>
               <td>{usuario.apellido}</td>
               <td>{usuario.dni}</td>
@@ -137,8 +140,8 @@ const Usuarios = () => {
           ))}
         </tbody>
       </table>
-      <div className="create-user">
-        <h2>Crear Usuario</h2>
+      <div className="create">
+        <h1>Crear Usuario</h1>
         <div className="input-fields">
           <input
             type="text"
@@ -190,7 +193,7 @@ const Usuarios = () => {
       {showModal && selectedUser && (
         <div className="modal">
           <div className="modal-content">
-            <h2>Usuario</h2>
+            <h2>Información de Usuario</h2>
             <p>Nombre: {selectedUser.nombre}</p>
             <p>Apellido: {selectedUser.apellido}</p>
             <p>DNI: {selectedUser.dni}</p>

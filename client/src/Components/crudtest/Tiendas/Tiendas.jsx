@@ -1,21 +1,34 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "../admin.css";
+// import "../admin.css";
 
 const Tiendas = () => {
   const [tiendasData, setTiendasData] = useState([]);
   const [nuevaTienda, setNuevaTienda] = useState({
+    id: "",
     nombre: "",
     descripcion: "",
     imagen_url: "",
+    vendedor: "",
   });
   const [showModal, setShowModal] = useState(false);
   const [selectedTienda, setSelectedTienda] = useState(null);
+  const [usuarios, setUsuarios] = useState([]);
 
   useEffect(() => {
+    obtenerUsuarios();
+
     obtenerTiendas();
   }, []);
 
+  const obtenerUsuarios = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/api/users");
+      setUsuarios(response.data.usuarios);
+    } catch (error) {
+      console.error("Error al obtener usuarios", error);
+    }
+  };
   const obtenerTiendas = async () => {
     try {
       const response = await axios.get("http://localhost:3000/api/stores");
@@ -92,17 +105,21 @@ const Tiendas = () => {
       <table className="table table-bordered">
         <thead>
           <tr>
+            <th>ID</th>
             <th>Nombre</th>
             <th>Descripción</th>
             <th>Imagen URL</th>
+            <th>Vendedor</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           {tiendasData.map((tienda) => (
             <tr key={tienda.id}>
+              <td>{tienda.id}</td>
               <td>{tienda.nombre}</td>
               <td>{tienda.descripcion}</td>
+              <td>{tienda.vendedor}</td>
               <td>{tienda.imagen_url}</td>
               <td>
                 <div className="d-flex flex-column">
@@ -130,7 +147,7 @@ const Tiendas = () => {
           ))}
         </tbody>
       </table>
-      <div className="create-tienda">
+      <div className="create">
         <h2>Crear Tienda</h2>
         <div className="input-fields">
           <input
@@ -154,6 +171,19 @@ const Tiendas = () => {
             value={nuevaTienda.imagen_url}
             onChange={handleChange}
           />
+          <select
+            name="vendedor"
+            value={nuevaTienda.vendedor}
+            onChange={handleChange}
+          >
+            <option value="">Selecciona un vendedor</option>
+            {usuarios.map((usuario) => (
+              <option key={usuario.id} value={usuario.id}>
+                {usuario.id}
+                {usuario.nombre}
+              </option>
+            ))}
+          </select>
         </div>
         <button className="btn btn-success" onClick={handleCrearTienda}>
           Crear Tienda

@@ -7,10 +7,8 @@ import CategoriaProducto from "../models/categoria_productos.js";
 import UsuarioModel from "../models/usuario.js";
 import RolModel from "../models/roles.js";
 
-
 export const syncModels = async () => {
   try {
-
     // Relación de Tienda con CategoriaTienda (Muchos a Muchos) a través de la tabla intermedia "TiendaCategoria"
     TiendaModel.belongsToMany(CategoriaTienda, { through: "TiendaCategoria" });
     CategoriaTienda.belongsToMany(TiendaModel, { through: "TiendaCategoria" });
@@ -30,6 +28,7 @@ export const syncModels = async () => {
     // Relación de Usuario con Rol (Uno a Uno)
     UsuarioModel.belongsTo(RolModel, { foreignKey: "rol" });
     RolModel.hasOne(UsuarioModel, { foreignKey: "rol" });
+
     Logger.info("✅ Todas las asociaciones entre modelos han sido definidas");
 
     await sequelize.sync({ alter: true }); // Set force: true to drop existing tables
