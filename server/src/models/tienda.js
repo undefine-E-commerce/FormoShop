@@ -20,13 +20,13 @@ const TiendaModel = sequelize.define(
     //TODO: categoria de tiendas
     tienda_categorias: {
       type: DataTypes.STRING,
-      allowNull: false,
+      // allowNull: false,
     },
     // imagen_url: {
     //   type: DataTypes.STRING,
     //   allowNull: false,
     // },
-     //TODO: referenciar dueño - usuario vendedor
+    //TODO: referenciar dueño - usuario vendedor
     // dueño: {
     //   type: DataTypes.INTEGER,
     //   allowNull: false,

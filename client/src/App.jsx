@@ -1,15 +1,14 @@
-import React from "react";
-import Navbar from "./Components/Navbar/Navbar";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Home from "./Components/Home/Home";
 import Productos from "./Components/crudtest/Productos/Productos";
 import Tiendas from "./Components/crudtest/Tiendas/Tiendas";
 import Usuarios from "./Components/crudtest/Usuarios/Usuarios";
+import Navbar from "./Components/Navbar/Navbar";
 
 const App = () => {
   return (
-    <div>
+    <div className="container">
       <Router>
         <Navbar></Navbar>
         <Routes>

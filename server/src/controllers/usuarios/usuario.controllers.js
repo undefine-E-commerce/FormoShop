@@ -58,10 +58,10 @@ const obtenerUsuarios = async (req, res) => {
 };
 
 const obtenerUsuario = async (req, res) => {
-  const { Id } = req.params.id;
+  const { id } = req.params;
 
   try {
-    const usuario = await UsuarioModel.findByPk(Id);
+    const usuario = await UsuarioModel.findByPk(id);
 
     if (!usuario) {
       return res.status(404).json({ error: "Usuario no existe" });
@@ -77,12 +77,12 @@ const obtenerUsuario = async (req, res) => {
 };
 
 const actualizarUsuario = async (req, res) => {
-  const { Id } = req.params.id;
+  const { id } = req.params;
   const { nombre, apellido, dni, email, nick_name, imagen_perfil, rol } =
     req.body;
 
   try {
-    const usuario = await UsuarioModel.findByPk(Id);
+    const usuario = await UsuarioModel.findByPk(id);
 
     if (!usuario) {
       return res.status(404).json({ error: "Usuario no existe" });
@@ -107,10 +107,10 @@ const actualizarUsuario = async (req, res) => {
 };
 
 const eliminarUsuario = async (req, res) => {
-  const { Id } = req.params.id;
+  const { id } = req.params;
 
   try {
-    const usuario = await UsuarioModel.findByPk(Id);
+    const usuario = await UsuarioModel.findByPk(id);
 
     if (!usuario) {
       return res.status(404).json({ error: "Usuario no existe" });

@@ -54,9 +54,9 @@ const obtenerProductos = async (req, res) => {
 };
 
 const obtenerProducto = async (req, res) => {
-  const { Id } = req.params.id;
+  const { id } = req.params;
   try {
-    const producto = await ProductoModel.findByPk(Id);
+    const producto = await ProductoModel.findByPk(id);
     if (!producto) {
       return res.status(404).json({ error: "Producto no existe" });
     }
@@ -71,11 +71,11 @@ const obtenerProducto = async (req, res) => {
 };
 
 const actualizarProducto = async (req, res) => {
-  const { Id } = req.params.id;
+  const { id } = req.params;
   const { nombre, descripcion, imagen_url } = req.body;
 
   try {
-    const producto = await ProductoModel.findByPk(Id);
+    const producto = await ProductoModel.findByPk(id);
     if (!producto) {
       return res.status(404).json({ error: "Producto no existe" });
     }
@@ -96,9 +96,9 @@ const actualizarProducto = async (req, res) => {
 };
 
 const eliminarProducto = async (req, res) => {
-  const { Id } = req.params.id;
+  const { id } = req.params;
   try {
-    const producto = await ProductoModel.findByPk(Id);
+    const producto = await ProductoModel.findByPk(id);
     if (!producto) {
       return res.status(404).json({ error: "Producto no existe" });
     }

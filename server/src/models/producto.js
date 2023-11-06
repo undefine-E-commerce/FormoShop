@@ -1,4 +1,5 @@
 import { sequelize, DataTypes } from "../config/db.js";
+import TiendaModel from "./tienda.js";
 
 const ProductoModel = sequelize.define(
   "Productos",
@@ -19,19 +20,23 @@ const ProductoModel = sequelize.define(
     },
     producto_categorias: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
-    // imagen_url: {
-    //   type: DataTypes.STRING,
-    // },
+    imagen_url: {
+      type: DataTypes.STRING, // Almacena la URL de la imagen del producto
+    },
     precio: {
       type: DataTypes.DECIMAL(10, 2),
     },
-    //TODO: referenciar a que tienda pertecene cada producto
-    //tienda:{
-       //   type: DataTypes.INTEGER,
-    //   allowNull: false,
-    // },
+    // Relaciona cada producto con una tienda
+    tiendaId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: TiendaModel, // Asocia el modelo de Tienda
+        key: "id", // Clave primaria de la tienda
+      },
+    },
   },
   {
     timestamps: true,
