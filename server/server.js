@@ -1,4 +1,3 @@
-//@ts-check
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
@@ -14,13 +13,14 @@ import { Logger } from "./src/loaders/logger.js";
 
 import { connectToDatabase } from "./src/config/db.js";
 import { syncModels } from "./src/config/sync.js";
-
+import cookieParser from "cookie-parser";
 const app = express();
 
 const PORT = process.env.PORT || 666;
 const URL = process.env.URL || "http://localhost:";
 
 app.enable("trust proxy");
+app.use(cookieParser());
 app.use(helmet());
 app.use(cors());
 app.use(morgan("dev"));
@@ -40,7 +40,7 @@ app.get("/", (req, res) => {
 });
 
 app.use((req, res, next) => {
-  const err = new Error(`❌${req.url} not found in this server`);
+  const err = new Error(`❌ ${req.url} not found in this server`);
   err.status = 404;
   next(err);
 });
